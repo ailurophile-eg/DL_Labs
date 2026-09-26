@@ -5,6 +5,7 @@ import sklearn
 import sklearn.datasets
 import sklearn.linear_model
 import scipy.io
+import io
 
 def sigmoid(x):
     """
@@ -325,7 +326,11 @@ def plot_decision_boundary(model, X, y):
     plt.show()
     
 def load_2D_dataset():
-    data = scipy.io.loadmat('https://raw.githubusercontent.com/ailurophile-eg/DL_Labs/refs/heads/main/Lab06/datasets/data.mat')
+    url = 'https://raw.githubusercontent.com/ailurophile-eg/DL_Labs/refs/heads/main/Lab06/datasets/data.mat'
+    # Download file content into memory from the URL
+    with urllib.request.urlopen(url) as response:
+        content = response.read() 
+    data = scipy.io.loadmat(io.BytesIO(content))
     train_X = data['X'].T
     train_Y = data['y'].T
     test_X = data['Xval'].T
