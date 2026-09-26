@@ -5,6 +5,7 @@ import sklearn
 import sklearn.datasets
 import sklearn.linear_model
 import scipy.io
+import urllib.request
 import io
 
 def sigmoid(x):
