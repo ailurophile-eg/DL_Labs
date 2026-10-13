@@ -19,7 +19,7 @@ letter_ref = [
 path_data = "./EMNIST_data"
 
 
-def load_hidden_message_images(file_name="hidden_message_images.pkl"):
+def load_hidden_message_images(file_name="https://raw.githubusercontent.com/ailurophile-eg/DL_Labs/refs/heads/main/Lab07/hidden_message_images.pkl"):
     """
     Loads hidden message images from a pickle file.
 
