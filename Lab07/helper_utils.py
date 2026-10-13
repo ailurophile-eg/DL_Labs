@@ -328,3 +328,91 @@ def convert_emnist_label_to_char(label):
 
     # Return the character tuple
     return char_tuple
+
+
+def display_image(image, label, title, num_ticks=6, show_values=True):
+    """
+    Displays an image with its corresponding label and title.
+
+    This function handles different image formats (PIL Image and PyTorch Tensor),
+    normalizes the display range, and optionally overlays pixel values on the image.
+
+    Args:
+        image: The image data to be displayed. Can be a PIL Image or a PyTorch Tensor.
+        label: The label associated with the image.
+        title: The title for the plot.
+        num_ticks (int, optional): The number of ticks to display on the color bar. Defaults to 6.
+        show_values (bool, optional): If True, overlays the numerical value of each pixel on the image. Defaults to True.
+    """
+    # Initialize variables for value range and image data.
+    vmin_val, vmax_val = None, None
+    image_data = None
+
+    # Check if the input is a PIL Image.
+    if isinstance(image, Image.Image):
+        # Set the value range for a standard 8-bit image.
+        vmin_val = 0
+        vmax_val = 255
+        # Convert the PIL Image to a NumPy array.
+        image_data = np.array(image)
+    # Check if the input is a PyTorch Tensor.
+    elif isinstance(image, torch.Tensor):
+        # Convert the tensor to a NumPy array and remove any single-dimensional entries.
+        image_np = image.numpy().squeeze()
+        # Determine the min and max values from the tensor for normalization.
+        vmin_val = image_np.min()
+        vmax_val = image_np.max()
+        # Assign the NumPy array to image_data.
+        image_data = image_np
+    # Handle unsupported image types.
+    else:
+        print("Warning: Unsupported image type.")
+        return
+
+    # Create a new figure for the plot.
+    plt.figure(figsize=(9, 9))
+    # Display the image data as a grayscale image.
+    plt.imshow(image_data, cmap='gray', vmin=vmin_val, vmax=vmax_val)
+    # Set the title of the plot with the provided title and label.
+    plt.title(f'{title} | Label: {label}')
+
+    # Check if pixel values should be displayed on the image.
+    if show_values:
+        # Calculate a threshold to determine the color of the text (black or white).
+        threshold = (vmin_val + vmax_val) / 2.0
+        # Get the dimensions of the image.
+        height, width = image_data.shape
+        
+        # Iterate over each pixel to display its value.
+        for y in range(height):
+            for x in range(width):
+                # Get the pixel value.
+                value = image_data[y, x]
+                # Set text color based on the pixel's brightness.
+                text_color = "white" if value < threshold else "black"
+                
+                # Format the text to display, handling integers and floats differently.
+                text_to_display = f"{value:.0f}" if isinstance(value, np.integer) else f"{value:.1f}"
+                
+                # Add the pixel value as text to the plot.
+                plt.text(x, y, text_to_display, 
+                         ha="center", va="center", color=text_color, fontsize=6)
+
+    # Add a grid to the plot.
+    plt.grid(True, color='red', alpha=0.3, zorder=2)
+    # Set the x-axis ticks.
+    plt.xticks(np.arange(0, 28, 4))
+    # Set the y-axis ticks.
+    plt.yticks(np.arange(0, 28, 4))
+    
+    # Add a color bar to the plot.
+    cbar = plt.colorbar()
+    # Create evenly spaced ticks for the color bar.
+    ticks = np.linspace(vmin_val, vmax_val, num=num_ticks)
+    # Set the ticks on the color bar.
+    cbar.set_ticks(ticks)
+    # Format the tick labels on the color bar.
+    cbar.ax.set_yticklabels([f'{t:.2f}' for t in ticks])
+
+    # Show the final plot.
+    plt.show()
