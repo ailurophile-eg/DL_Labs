@@ -19,7 +19,7 @@ letter_ref = [
 path_data = "./EMNIST_data"
 
 
-def load_hidden_message_images():
+def load_hidden_message_images(file_name="hidden_message_images.pkl"):
     """
     Loads hidden message images from a pickle file.
 
@@ -29,9 +29,6 @@ def load_hidden_message_images():
     Returns:
         message_imgs (list): A list containing the loaded message images.
     """
-    url = "https://raw.githubusercontent.com/ailurophile-eg/DL_Labs/refs/heads/main/Lab07/hidden_message_images.pkl"
-    file_name = "hidden_message_images.pkl"
-    urllib.request.urlretrieve(url, file_name)
     
     # Open the specified file in read-binary mode
     with open(file_name, "rb") as f:
