@@ -330,7 +330,7 @@ def convert_emnist_label_to_char(label):
     return char_tuple
 
 
-def display_image(image, label, title, num_ticks=6, show_values=True):
+def display_image(image, label=None, num_ticks=6, show_values=True):
     """
     Displays an image with its corresponding label and title.
 
@@ -374,7 +374,17 @@ def display_image(image, label, title, num_ticks=6, show_values=True):
     # Display the image data as a grayscale image.
     plt.imshow(image_data, cmap='gray', vmin=vmin_val, vmax=vmax_val)
     # Set the title of the plot with the provided title and label.
-    plt.title(f'{title} | Label: {label}')
+    # Check if a label is provided for the title
+    if label is not None:
+        # Convert the label to uppercase and lowercase characters
+        uppercase_char, lowercase_char = convert_emnist_label_to_char(label)
+        
+        # Create a formatted title string
+        title = f"EMNIST Letter: {uppercase_char}/{lowercase_char}"
+    else:
+        # Set the title to None if no label is provided
+        title = None
+    plt.title(f'{title}')
 
     # Check if pixel values should be displayed on the image.
     if show_values:
