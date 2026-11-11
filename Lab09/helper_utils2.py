@@ -1,4 +1,5 @@
 import itertools
+import copy
 import os
 import random
 from collections import defaultdict
